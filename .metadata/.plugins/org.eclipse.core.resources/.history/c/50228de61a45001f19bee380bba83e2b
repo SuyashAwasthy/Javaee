@@ -1,0 +1,170 @@
+package com.techlabs.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import com.techlabs.entity.Student;
+
+public class StudentDbUtil {
+
+	private DataSource dataSource;
+
+	public StudentDbUtil(DataSource dataSource) {
+		super();
+		this.dataSource = dataSource;
+	}
+
+	public List<Student> getStudents() {
+
+		List<Student> students = new ArrayList<Student>();
+
+		try {
+			Connection conn;
+			conn = dataSource.getConnection();
+			Statement stmt;
+			stmt = conn.createStatement();
+			String sql = "select * from student";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				int id = rs.getInt("id");
+				String firstName = rs.getString("first_name");
+				String lastName = rs.getString("last_name");
+				String email = rs.getString("email");
+
+				Student student = new Student(id, firstName, lastName, email);
+				students.add(student);
+			}
+		}
+
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return students;
+	}
+
+	public boolean addStudent(Student student) {
+
+		try {
+			Connection connection = dataSource.getConnection();
+
+			String sql = "insert into student(first_name,last_name,email) values(?,?,?)";
+
+			PreparedStatement prepareStatement = connection.prepareStatement(sql);
+
+			prepareStatement.setString(1, student.getFirstName());
+			prepareStatement.setString(2, student.getLastName());
+			prepareStatement.setString(3, student.getEmail());
+
+			int res = prepareStatement.executeUpdate();
+
+			return res == 1 ? true : false;
+
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+	
+	public void updateStudent(Student student) {
+
+		try {
+			Connection connection = dataSource.getConnection();
+
+			String sql = "update student set first_name=?, last_name=?, email=? where id=?";
+
+			PreparedStatement prepareStatement = connection.prepareStatement(sql);
+
+			prepareStatement.setString(1, student.getFirstName());
+			prepareStatement.setString(2, student.getLastName());
+			prepareStatement.setString(3, student.getEmail());
+			prepareStatement.setInt(4,  student.getId());
+			prepareStatement.executeUpdate();
+
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+//	public Student getStudent(int id) {
+//		
+//		try {
+//			Connection connection = dataSource.getConnection();
+//
+//			String sql = "select * from student where id=?";
+//
+//			PreparedStatement prepareStatement = connection.prepareStatement(sql);
+//
+//			prepareStatement.setInt(1, id);
+//
+//			ResultSet rs = prepareStatement.executeQuery();
+//			
+//			while(rs.next()) {
+//				String firstName = rs.getString("first_name");
+//				String lastName = rs.getString("last_name");
+//				String email = rs.getString("email");
+//
+//				Student student = new Student(id,firstName, lastName, email);
+//				return student;
+//			}
+//
+//		} 
+//		catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return null;
+//	}
+
+	public void deleteStudent(int id) {
+		try {
+			Connection connection = dataSource.getConnection();
+
+			String sql = "delete from student where id=?";
+
+			PreparedStatement prepareStatement = connection.prepareStatement(sql);
+
+			prepareStatement.setInt(1, id);
+			prepareStatement.executeUpdate();
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public List<Student> searchStudent(String first_name) {
+		List<Student> students = new ArrayList<>();
+
+		try {
+			Connection conn = dataSource.getConnection();
+			String sql = "select * from student";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, "%"+first_name+"%");
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Student student = new Student();
+
+				student.setId(rs.getInt("id"));
+                student.setFirstName(rs.getString("first_name"));
+                student.setLastName(rs.getString("last_name"));
+                student.setEmail(rs.getString("email"));
+                students.add(student);
+			}
+		}
+
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return students;
+	}
+
+}

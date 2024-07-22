@@ -1,0 +1,90 @@
+package com.techlabs.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
+
+@WebServlet("/CustomerController")
+public class CustomerController extends HttpServlet {
+
+	private BankDAO model;
+
+	@Resource(name = "jdbc/bankdb")
+	private DataSource dataSource;
+
+	@Override
+	public void init() throws ServletException {
+
+		super.init();
+		model = new model(dataSource);
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		String command;
+
+		command = request.getParameter("command");
+
+		if (command == null) {
+			command = "list";
+		}
+
+		switch (command) {
+		case "viewpassbook":
+			viewPassbook(request, response);
+			break;
+		case "newtransaction":
+			newTransaction(request, response);
+			break;
+		case "edit":
+			editProfile(request, response);
+			break;
+		default:
+			
+		}
+
+	}
+
+	private void editProfile(HttpServletRequest request, HttpServletResponse response) {
+		Customer customer = view.getProfileUpdate();
+        customer.setId(getCustomerIdByAccountNumber(accountNumber));
+        model.updateCustomer(customer);
+        System.out.println("Profile updated successfully!");
+	}
+
+	private void newTransaction(HttpServletRequest request, HttpServletResponse response) {
+		String type = view.getTransactionType();
+        String toAccountNumber = null;
+        if ("transfer".equalsIgnoreCase(type)) {
+            toAccountNumber = view.getToAccountNumber();
+        }
+        double amount = view.getAmount();
+        Transaction transaction = new Transaction();
+        transaction.setSenderAccountNumber(accountNumber);
+        transaction.setReceiverAccountNumber(toAccountNumber);
+        transaction.setType(type);
+        transaction.setAmount(amount);
+        model.addTransaction(transaction);
+        System.out.println("Transaction completed successfully!");		
+	}
+
+	private void viewPassbook(HttpServletRequest request, HttpServletResponse response) {
+		List<Transaction> transactions = model.getTransactionsByAccountNumber(accountNumber);
+        view.displayPassbook(transactions);
+	}
+	
+	private int getCustomerIdByAccountNumber(String accountNumber) {
+        Account account = model.getAccountByCustomerId(model.getCustomerById(getCustomerId()).getId());
+        return account.getCustomerId();
+    }
+
+
+}

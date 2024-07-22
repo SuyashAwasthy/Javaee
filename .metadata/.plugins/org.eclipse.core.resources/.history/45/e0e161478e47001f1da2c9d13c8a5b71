@@ -1,0 +1,59 @@
+package com.techlabs.filter;
+
+import java.util.List;
+import java.util.Scanner;
+
+import com.techlabs.model.Customer;
+import com.techlabs.model.Transaction;
+
+public class CustomerView {
+	public void displayMenu() {
+        System.out.println("\nCustomer Home");
+        System.out.println("1. Passbook");
+        System.out.println("2. New Transaction");
+        System.out.println("3. Edit Profile");
+        System.out.println("4. Exit");
+    }
+
+    public void displayPassbook(List<Transaction> transactions) {
+        System.out.println("Passbook:");
+        for (Transaction transaction : transactions) {
+            System.out.println("Sender: " + transaction.getSenderAccountNumber() + ", Receiver: " + transaction.getReceiverAccountNumber() +
+                    ", Type: " + transaction.getType() + ", Amount: " + transaction.getAmount() + ", Date: " + transaction.getDate());
+        }
+    }
+
+    public String getTransactionType() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter transaction type (credit/debit/transfer): ");
+        return scanner.nextLine();
+    }
+
+    public String getToAccountNumber() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter to account number (if transfer): ");
+        return scanner.nextLine();
+    }
+
+    public double getAmount() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter amount: ");
+        return Double.parseDouble(scanner.nextLine());
+    }
+
+    public Customer getProfileUpdate() {
+        Scanner scanner = new Scanner(System.in);
+        Customer customer = new Customer();
+
+        System.out.print("Enter new first name: ");
+        customer.setFirstName(scanner.nextLine());
+
+        System.out.print("Enter new last name: ");
+        customer.setLastName(scanner.nextLine());
+
+        System.out.print("Enter new password: ");
+        customer.setPassword(scanner.nextLine());
+
+        return customer;
+    }
+}

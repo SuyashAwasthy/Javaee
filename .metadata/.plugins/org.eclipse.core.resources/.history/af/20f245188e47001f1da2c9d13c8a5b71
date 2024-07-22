@@ -1,0 +1,193 @@
+package com.techlabs.model;
+
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+public class BankDAO {
+	private Connection connection;
+
+    public BankDAO() {
+        try {
+            Properties props = new Properties();
+            InputStream input = getClass().getClassLoader().getResourceAsStream("db.properties");
+            props.load(input);
+
+            String url = props.getProperty("db.url");
+            String username = props.getProperty("db.username");
+            String password = props.getProperty("db.password");
+
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Customer operations
+    public void addCustomer(Customer customer) {
+        try {
+            String query = "INSERT INTO customers (first_name, last_name, email, password) VALUES (?, ?, ?, ?)";
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, customer.getFirstName());
+            pstmt.setString(2, customer.getLastName());
+            pstmt.setString(3, customer.getEmail());
+            pstmt.setString(4, customer.getPassword());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Customer> getAllCustomers() {
+        List<Customer> customers = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM customers");
+            while (rs.next()) {
+                Customer customer = new Customer();
+                customer.setId(rs.getInt("id"));
+                customer.setFirstName(rs.getString("first_name"));
+                customer.setLastName(rs.getString("last_name"));
+                customer.setEmail(rs.getString("email"));
+                customers.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    public Customer getCustomerById(int customerId) {
+        Customer customer = null;
+        try {
+            String query = "SELECT * FROM customers WHERE id = ?";
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setInt(1, customerId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                customer = new Customer();
+                customer.setId(rs.getInt("id"));
+                customer.setFirstName(rs.getString("first_name"));
+                customer.setLastName(rs.getString("last_name"));
+                customer.setEmail(rs.getString("email"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customer;
+    }
+
+    public void updateCustomer(Customer customer) {
+        try {
+            String query = "UPDATE customers SET first_name = ?, last_name = ?, email = ?, password = ? WHERE id = ?";
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, customer.getFirstName());
+            pstmt.setString(2, customer.getLastName());
+            pstmt.setString(3, customer.getEmail());
+            pstmt.setString(4, customer.getPassword());
+            pstmt.setInt(5, customer.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Account operations
+    public void addAccount(Account account) {
+        try {
+            String query = "INSERT INTO accounts (customer_id, account_number, balance) VALUES (?, ?, ?)";
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setInt(1, account.getCustomerId());
+            pstmt.setString(2, account.getAccountNumber());
+            pstmt.setDouble(3, account.getBalance());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Account getAccountByCustomerId(int customerId) {
+        Account account = null;
+        try {
+            String query = "SELECT * FROM accounts WHERE customer_id = ?";
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setInt(1, customerId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                account = new Account();
+                account.setId(rs.getInt("id"));
+                account.setCustomerId(rs.getInt("customer_id"));
+                account.setAccountNumber(rs.getString("account_number"));
+                account.setBalance(rs.getDouble("balance"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return account;
+    }
+
+    public List<Account> getAllAccounts() {
+        List<Account> accounts = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM accounts");
+            while (rs.next()) {
+                Account account = new Account();
+                account.setId(rs.getInt("id"));
+                account.setCustomerId(rs.getInt("customer_id"));
+                account.setAccountNumber(rs.getString("account_number"));
+                account.setBalance(rs.getDouble("balance"));
+                accounts.add(account);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return accounts;
+    }
+
+    // Transaction operations
+    public void addTransaction(Transaction transaction) {
+        try {
+            String query = "INSERT INTO transactions (sender_account_number, receiver_account_number, type, amount) VALUES (?, ?, ?, ?)";
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, transaction.getSenderAccountNumber());
+            pstmt.setString(2, transaction.getReceiverAccountNumber());
+            pstmt.setString(3, transaction.getType());
+            pstmt.setDouble(4, transaction.getAmount());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Transaction> getTransactionsByAccountNumber(String accountNumber) {
+        List<Transaction> transactions = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM transactions WHERE sender_account_number = ? OR receiver_account_number = ?";
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, accountNumber);
+            pstmt.setString(2, accountNumber);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Transaction transaction = new Transaction();
+                transaction.setId(rs.getInt("id"));
+                transaction.setSenderAccountNumber(rs.getString("sender_account_number"));
+                transaction.setReceiverAccountNumber(rs.getString("receiver_account_number"));
+                transaction.setType(rs.getString("type"));
+                transaction.setAmount(rs.getDouble("amount"));
+                transaction.setDate(rs.getTimestamp("date"));
+                transactions.add(transaction);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactions;
+    }
+}

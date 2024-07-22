@@ -1,0 +1,11 @@
+package com.techlabs.model;
+
+public class StringUtil {
+
+	static String concat() {
+		String s1 = "Suyash ";
+		String s2 = "Awasthy";
+		return s1+s2;
+	}
+	
+}

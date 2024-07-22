@@ -1,0 +1,116 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .tab-content {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #toAccountGroup {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Welcome, [Customer Name]</h1>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#passbook">Passbook</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#new-transaction">New Transaction</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#edit-profile">Edit Profile</a>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-3">
+            <div id="passbook" class="tab-pane fade show active">
+                <h4>Passbook</h4>
+                <!-- Passbook content -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sender Account No</th>
+                            <th>Receiver Account No</th>
+                            <th>Type of Transaction</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Passbook details will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="new-transaction" class="tab-pane fade">
+                <h4>New Transaction</h4>
+                <!-- New Transaction Form -->
+                <form action="newTransaction" method="post">
+                    <div class="form-group">
+                        <label for="transactionType">Transaction Type</label>
+                        <select class="form-control" id="transactionType" name="transactionType" required>
+                            <option value="credit">Credit</option>
+                            <option value="debit">Debit</option>
+                            <option value="transfer">Transfer</option>
+                        </select>
+                    </div>
+                    <div id="toAccountGroup" class="form-group">
+                        <label for="toAccount">To Account Number</label>
+                        <input type="text" class="form-control" id="toAccount" name="toAccount">
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" class="form-control" id="amount" name="amount" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='home.jsp'">Cancel</button>
+                </form>
+                <script>
+                    document.getElementById('transactionType').addEventListener('change', function () {
+                        var toAccountGroup = document.getElementById('toAccountGroup');
+                        if (this.value === 'transfer') {
+                            toAccountGroup.style.display = 'block';
+                        } else {
+                            toAccountGroup.style.display = 'none';
+                        }
+                    });
+                </script>
+            </div>
+            <div id="edit-profile" class="tab-pane fade">
+                <h4>Edit Profile</h4>
+                <!-- Edit Profile Form -->
+                <form action="editProfile" method="post">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName"  required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName"  required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='home.jsp'">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

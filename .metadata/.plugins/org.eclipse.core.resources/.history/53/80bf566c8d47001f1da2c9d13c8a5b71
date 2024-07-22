@@ -1,0 +1,63 @@
+package com.techlabs.controller;
+
+import java.util.List;
+import java.util.Random;
+
+import com.techlabs.model.Account;
+import com.techlabs.model.BankDAO;
+import com.techlabs.model.Customer;
+import com.techlabs.model.Transaction;
+import com.techlabs.view.AdminView;
+
+public class AdminController {
+
+	private BankDAO model;
+    public AdminView view;
+
+    public AdminController(BankDAO model, AdminView view) {
+        this.model = model;
+        this.view = view;
+    }
+
+	public void addNewCustomer() {
+        Customer customer = view.getCustomerDetails();
+        model.addCustomer(customer);
+        System.out.println("Customer added successfully!");
+    }
+
+    public void addBankAccount() {
+        int customerId = view.getCustomerId();
+        Customer customer = model.getCustomerById(customerId);
+        if (customer != null) {
+            view.displayCustomer(customer);
+            String accountNumber = generateAccountNumber();
+            Account account = new Account();
+            account.setCustomerId(customerId);
+            account.setAccountNumber(accountNumber);
+            account.setBalance(0);
+            model.addAccount(account);
+            System.out.println("Bank account created successfully!");
+        } else {
+            System.out.println("Customer not found!");
+        }
+    }
+
+    public void viewAllCustomers() {
+        List<Customer> customers = model.getAllCustomers();
+        view.displayAllCustomers(customers);
+    }
+
+    public void viewAllTransactions() {
+        List<Account> accounts = model.getAllAccounts();
+        for (Account account : accounts) {
+            List<Transaction> transactions = model.getTransactionsByAccountNumber(account.getAccountNumber());
+            view.displayAllTransactions(transactions);
+        }
+    }
+
+    private String generateAccountNumber() {
+        Random random = new Random();
+        return String.format("%016d", random.nextLong() & Long.MAX_VALUE);
+    }
+	
+}

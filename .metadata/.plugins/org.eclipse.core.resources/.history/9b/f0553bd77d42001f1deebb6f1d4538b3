@@ -1,0 +1,18 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@ page import="java.util.List, java.util.ArrayList, com.techlabs.model.Employee"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<%
+		List<Employee> employees = new ArrayList<>();
+	
+	%>
+
+</body>
+</html>

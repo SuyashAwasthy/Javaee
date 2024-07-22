@@ -1,0 +1,66 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>View Customers</title>
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<style>
+.container {
+	margin-top: 50px;
+}
+
+.table {
+	margin-top: 20px;
+}
+</style>
+</head>
+<body>
+
+	<div class="container">
+		<h2 class="text-center">View Customers</h2>
+		<form action="searchCustomer" method="get" class="search-form">
+		<label for="customerId">Customer ID:</label> <select id="customerId"
+			name="customerId">
+			<option value="">Select Customer ID</option>
+			<%-- Iterate over customer IDs and populate the options --%>
+			<c:forEach var="customer" items="${customers}">
+				<option value="${customer.id}">${customer.id}</option>
+			</c:forEach>
+		</select> <label for="firstName">First Name:</label> <select id="firstName"
+			name="firstName">
+			<option value="">Select First Name</option>
+			<%-- Iterate over customer first names and populate the options --%>
+			<c:forEach var="customer" items="${customers}">
+				<option value="${customer.firstName}">${customer.firstName}</option>
+			</c:forEach>
+		</select>
+		<button type="submit" class="btn">Search</button>
+	</form>
+		<div class="text-right mb-3"></div>
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Email</th>
+					<th>Password</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="customer" items="${customers}">
+					<tr>
+						<td>${customer.firstName}</td>
+						<td>${customer.lastName}</td>
+						<td>${customer.email}</td>
+						<td>${customer.passsword}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<a href="adminHome.jsp" class="button">Back to Admin Home</a>
+	</div>
+</body>
+</html>

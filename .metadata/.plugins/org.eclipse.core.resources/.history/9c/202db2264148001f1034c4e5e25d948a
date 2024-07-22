@@ -1,0 +1,84 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Home</title>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/customerHome.css">
+    <style>
+        .custom-margin {
+            margin-top: 30px; /* Adjust the value as needed */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+        <a class="navbar-brand" href="#">Customer Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="customerHome.jsp">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="passbook.jsp">Passbook</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="newTransaction.jsp">New Transaction</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="editProfile.jsp">Edit Profile</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                   <a href="logout" class="logout-btn">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4 text-center custom-margin">
+        <h1>Welcome to Customer Home</h1>
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Passbook</h5>
+                        <p class="card-text">View your passbook details.</p>
+                        <a href="user?command=view_passbook" class="btn btn-primary">View Passbook</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">New Transaction</h5>
+                        <p class="card-text">Perform a new transaction.</p>
+                        <a href="user?command=new_transaction" class="btn btn-primary">New Transaction</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Edit Profile</h5>
+                        <p class="card-text">Edit your profile details.</p>
+                        <a href="user?command=edit_profile" class="btn btn-primary">Edit Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>View Transactions</title>
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+
+	<div class="container">
+		<a href="adminHome.jsp" class="button">Back to Admin Home</a>
+		<h2 class="mt-5 text-center">Transactions</h2>
+		<form action="searchTransactionsByDate" method="get" class="date-form">
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate" required>
+            
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" name="endDate" required>
+            
+            <button type="submit" class="btn">Search by Date</button>
+        </form>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Sender Account Number</th>
+					<th>Receiver Account Number</th>
+					<th>Type</th>
+					<th>Amount</th>
+					<th>Date</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="transaction" items="${transactions}">
+					<tr>
+						<td>${transaction.id}</td>
+						<td>${transaction.senderAccountNumber}</td>
+						<td>${transaction.receiverAccountNumber}</td>
+						<td>${transaction.type}</td>
+						<td>${transaction.amount}</td>
+						<td>${transaction.date}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

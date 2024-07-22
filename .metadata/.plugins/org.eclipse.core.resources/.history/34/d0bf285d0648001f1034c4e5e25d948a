@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Home</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="adminHome.jsp">Home</a>
+        <a href="addCustomer.jsp">Add Customer</a>
+        <a href="addAccount.jsp">Add Account</a>
+        <a href="viewCustomers.jsp">View Customers</a>
+        <a href="viewTransactions.jsp">View Transactions</a>
+    </div>
+
+    <div class="container">
+        <h1>Welcome to Admin Home</h1>
+        <div class="card-container">
+            <div class="card">
+                <h2>Add New Customer</h2>
+                <p>Create a new customer account in the system.</p>
+                <a href="addCustomer.jsp" class="btn">Add Customer</a>
+            </div>
+            <div class="card">
+                <h2>Add New Account</h2>
+                <p>Create a new bank account for an existing customer.</p>
+                <a href="addBankAccountNumber.jsp" class="btn">Add Account</a>
+            </div>
+            <div class="card">
+                <h2>View Customers</h2>
+                <p>View the list of all customers in the system.</p>
+                <a href="viewCustomers.jsp" class="btn">View Customers</a>
+            </div>
+            <div class="card">
+                <h2>View Transactions</h2>
+                <p>View the transaction history of all accounts.</p>
+                <a href="viewTransactions.jsp" class="btn">View Transactions</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+package com.techlabs.main;
+
+import java.util.Scanner;
+
+import com.techlabs.controller.AdminController;
+import com.techlabs.controller.CustomerController;
+import com.techlabs.model.BankDAO;
+import com.techlabs.view.AdminView;
+import com.techlabs.view.CustomerView;
+
+public class Main {
+
+	public static void main(String[] args) {
+		BankDAO model = new BankDAO();
+        AdminView adminView = new AdminView();
+        AdminController adminController = new AdminController(model, adminView);
+
+        boolean exit = false;
+        while (!exit) {
+            System.out.println("\nBank Management System");
+            System.out.println("1. Admin Login");
+            System.out.println("2. Customer Login");
+            System.out.println("3. Exit");
+
+            Scanner scanner = new Scanner(System.in);
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "1":
+                    adminController(adminController);
+                    break;
+                case "2":
+                    customerController(model);
+                    break;
+                case "3":
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+	}
+	
+	private static void adminController(AdminController adminController) {
+        boolean exit = false;
+        while (!exit) {
+            adminController.view.displayMenu();
+            Scanner scanner = new Scanner(System.in);
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "1":
+                    adminController.addNewCustomer();
+                    break;
+                case "2":
+                    adminController.addBankAccount();
+                    break;
+                case "3":
+                	adminController.viewAllCustomers();
+                    break;
+                case "4":
+                    adminController.viewAllTransactions();
+                    break;
+                case "5":
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    private static void customerController(BankDAO model) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter your account number: ");
+        String accountNumber = scanner.nextLine();
+
+        CustomerView customerView = new CustomerView();
+        CustomerController customerController = new CustomerController(model, customerView, accountNumber);
+
+        boolean exit = false;
+        while (!exit) {
+            customerController.view.displayMenu();
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "1":
+                    customerController.viewPassbook();
+                    break;
+                case "2":
+                    customerController.newTransaction();
+                    break;
+                case "3":
+                    customerController.editProfile();
+                    break;
+                case "4":
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+}

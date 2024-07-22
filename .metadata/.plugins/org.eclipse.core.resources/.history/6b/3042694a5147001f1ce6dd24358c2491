@@ -1,0 +1,151 @@
+package com.techlabs.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
+
+import com.techlabs.dao.BankDAO;
+import com.techlabs.entity.Account;
+import com.techlabs.entity.Customer;
+import com.techlabs.entity.Transaction;
+
+
+
+@WebServlet("/admin")
+public class AdminController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	
+	private BankDAO bankDao;
+	
+    @Resource(name = "jdbc/bankdb")
+	private DataSource dataSource;
+
+
+    @Override
+	public void init() throws ServletException {
+		// TODO Auto-generated method stub
+		super.init();
+		bankDao = new BankDAO(dataSource);
+	}
+
+    
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String command = request.getParameter("command");
+		
+	    if (command == null) {
+	    	command = "load_customers";
+	    }
+	    
+	    System.out.println(command);
+	    switch(command) {
+	    	case "add_customer":
+	    		addCustomer(request, response);
+	    		break;
+	    	case "add_bank_account":
+	    		addBankAccount(request, response);
+	    		break;
+	    	case "view_transaction":
+	    		viewTransaction(request, response);
+	    		break;
+	    	default:
+	    		viewCustomer(request, response);
+	    }
+	    
+	}
+
+	
+	
+	private void viewCustomer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		List<Customer> customers = bankDao.viewCustomer();
+		System.out.println(customers);
+		
+		request.setAttribute("customerList", customers);
+		
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/adminHome.jsp");
+		
+		requestDispatcher.forward(request, response);
+		
+	}
+
+
+	private void viewTransaction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		List<Transaction> transactions = bankDao.viewTransaction();
+		System.out.println(transactions);
+		
+		request.setAttribute("transactionList", transactions);
+		
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/viewTransaction.jsp");
+		
+		requestDispatcher.forward(request, response);
+		
+	}
+
+
+	private void addBankAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
+		String customer_id = request.getParameter("customer_id");
+		
+		int customerId = 0;
+
+	    customerId = Integer.parseInt(customer_id);
+        Customer customer = bankDao.getCustomerById(customerId);   
+        
+        if (customer != null) {
+            Account account = new Account(customer.getId(), 0);
+            boolean accountCreated = bankDao.createAccount(account);
+            
+            if (accountCreated) {
+            
+	            System.out.println("Bank account created successfully!");
+	            request.setAttribute("successMessage", "Bank account created successfully!");
+	            request.setAttribute("accountDetails", account);
+            }
+            else {
+                request.setAttribute("errorMessage", "Failed to create bank account. Please try again.");
+            }
+            
+        } 
+        else {
+            System.out.println("Customer not found!");
+            request.setAttribute("errorMessage", "Customer not found!");
+        }
+    }
+
+
+	private void addCustomer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		
+		String firstName = request.getParameter("first_name");
+		String lastName = request.getParameter("last_name");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+		
+		Customer customer = new Customer(firstName, lastName, email, password);
+		
+		boolean addedOrNot = bankDao.addCustomer(customer);
+		
+		if(addedOrNot) System.out.println("Customer added successfully");
+		
+		response.sendRedirect("/adminHome.jsp");
+		
+	}
+
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}

@@ -1,0 +1,164 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="addCustomer-tab" data-toggle="tab" href="#addCustomer" role="tab" aria-controls="addCustomer" aria-selected="true">Add New Customer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="addAccount-tab" data-toggle="tab" href="#addAccount" role="tab" aria-controls="addAccount" aria-selected="false">Add Account</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="viewCustomers-tab" data-toggle="tab" href="#viewCustomers" role="tab" aria-controls="viewCustomers" aria-selected="false">View Customers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="viewTransactions-tab" data-toggle="tab" href="#viewTransactions" role="tab" aria-controls="viewTransactions" aria-selected="false">View Transactions</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="addCustomer" role="tabpanel" aria-labelledby="addCustomer-tab">
+                <h2>Add New Customer</h2>
+                <form action="admin" method="get">
+                    <input type="hidden" name="command" value="add_customer">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Customer</button>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="addAccount" role="tabpanel" aria-labelledby="addAccount-tab">
+                <h2>Add New Account</h2>
+                <form action="addAccount" method="post">
+                    <div class="form-group">
+                        <label for="customerId">Customer ID</label>
+                        <input type="text" class="form-control" id="customerId" name="customerId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="accountNumber">Account Number</label>
+                        <input type="text" class="form-control" id="accountNumber" name="accountNumber" readonly>
+                        <div id="accountNumberSection" style="display: none;">
+                            <p>Account Number: <span id="displayAccountNumber"></span></p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="generateAccountNumber()">Generate Account Number</button>
+                    <button type="submit" class="btn btn-primary">Add Account</button>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="viewCustomers" role="tabpanel" aria-labelledby="viewCustomers-tab">
+                <h2>View Customers</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Account Number</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerTableBody">
+                        <!-- Table rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="viewTransactions" role="tabpanel" aria-labelledby="viewTransactions-tab">
+                <h2>View Transactions</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Sender Account</th>
+                            <th>Receiver Account</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionTableBody">
+                        <!-- Table rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateAccountNumber() {
+            var accountNumber = "AUTO_GENERATED_" + new Date().getTime(); // Example logic to generate account number
+
+            $.ajax({
+                url: "checkAccountNumber",
+                method: "GET",
+                data: { accountNumber: accountNumber },
+                success: function(response) {
+                    if (response.exists) {
+                        alert("The account number already exists. Generating a new one.");
+                        generateAccountNumber(); // Optionally, generate a new account number
+                    } else {
+                        document.getElementById("accountNumber").value = accountNumber;
+                        document.getElementById("displayAccountNumber").textContent = accountNumber;
+                        document.getElementById("accountNumberSection").style.display = "block";
+                    }
+                },
+                error: function() {
+                    alert("An error occurred while checking the account number.");
+                }
+            });
+        }
+
+        function populateCustomerTable() {
+            $.ajax({
+                url: "fetchAllCustomers",
+                method: "GET",
+                success: function(response) {
+                    var tbody = document.getElementById("customerTableBody");
+                    tbody.innerHTML = ""; // Clear previous rows
+                    response.customers.forEach(function(customer) {
+                        var row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${customer.id}</td>
+                            <td>${customer.firstName}</td>
+                            <td>${customer.lastName}</td>
+                            <td>${customer.accountNumber}</td>
+                            <td>${customer.balance}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                },
+                error: function() {
+                    alert("An error occurred while fetching customer data.");
+                }
+            });
+        }
+
+        // Call these functions on page load
+        $(document).ready(function() {
+            populateCustomerTable();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+package com.techlabs.controller;
+
+import java.util.List;
+
+import com.techlabs.model.Account;
+import com.techlabs.model.BankDAO;
+import com.techlabs.model.Customer;
+import com.techlabs.model.Transaction;
+import com.techlabs.view.CustomerView;
+
+public class CustomerController {
+	private BankDAO model;
+    public CustomerView view;
+    private String accountNumber;
+
+    public CustomerController(BankDAO model, CustomerView view, String accountNumber) {
+        this.model = model;
+        this.view = view;
+        this.accountNumber = accountNumber;
+    }
+
+    public void viewPassbook() {
+        List<Transaction> transactions = model.getTransactionsByAccountNumber(accountNumber);
+        view.displayPassbook(transactions);
+    }
+
+    public void newTransaction() {
+        String type = view.getTransactionType();
+        String toAccountNumber = null;
+        if ("transfer".equalsIgnoreCase(type)) {
+            toAccountNumber = view.getToAccountNumber();
+        }
+        double amount = view.getAmount();
+        Transaction transaction = new Transaction();
+        transaction.setSenderAccountNumber(accountNumber);
+        transaction.setReceiverAccountNumber(toAccountNumber);
+        transaction.setType(type);
+        transaction.setAmount(amount);
+        model.addTransaction(transaction);
+        System.out.println("Transaction completed successfully!");
+    }
+
+    public void editProfile() {
+        Customer customer = view.getProfileUpdate();
+        customer.setId(getCustomerIdByAccountNumber(accountNumber));
+        model.updateCustomer(customer);
+        System.out.println("Profile updated successfully!");
+    }
+
+    private int getCustomerIdByAccountNumber(String accountNumber) {
+        Account account = model.getAccountByCustomerId(model.getCustomerById(getCustomerId()).getId());
+        return account.getCustomerId();
+    }
+}

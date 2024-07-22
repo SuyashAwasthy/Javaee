@@ -1,0 +1,115 @@
+package com.techlabs.controller;
+
+import java.io.IOException;
+import java.util.List;
+import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
+import com.techlabs.dao.BankDAO;
+import com.techlabs.entity.Customer;
+import com.techlabs.entity.Transaction;
+
+@WebServlet("/user")
+public class CustomerController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	private BankDAO bankDao;
+
+	 @Resource(name = "jdbc/bankdb")
+	 private DataSource dataSource;
+
+	 @Override
+	 public void init() throws ServletException {
+
+		  super.init();
+		 bankDao = new BankDAO(dataSource);
+	 }
+
+	
+	 protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+			String command;
+
+			command = request.getParameter("command");
+
+			if (command == null) {
+				command = "view_passbook";
+			}
+
+			switch (command) {
+			case "new_transaction":
+				newTransaction(request, response);
+				break;
+			case "edit_profile":
+				editProfile(request, response);
+				break;
+			default:
+				viewPassbook(request, response);
+			}
+
+		}
+	 
+
+	private void viewPassbook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Customer customer = (Customer) request.getAttribute("customer");
+		
+		List<Transaction> customerTransactions = bankDao.viewCustomerTransaction(customer);
+		
+		System.out.println(customerTransactions);
+		
+		request.setAttribute("customerTransactionList", customerTransactions);
+		
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("/viewCustomerTransaction.jsp");
+		
+		requestDispatcher.forward(request, response);
+		
+	}
+
+
+	private void editProfile(HttpServletRequest request, HttpServletResponse response) {
+		
+		Customer customer = (Customer) request.getAttribute("customer");
+		
+		customer.setFirstName(request.getParameter("first_name"));
+		customer.setLastName(request.getParameter("last_name"));
+		customer.setPassword(request.getParameter("password"));
+		
+		boolean addedOrNot = bankDao.updateCustomerProfile(customer);
+		
+		if(addedOrNot) 
+			System.out.println("Customer Details updated successfully");
+		
+	}
+
+
+	private void newTransaction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		Customer customer = (Customer) request.getAttribute("customer");
+		
+		String transactionType = request.getParameter("transaction_type");
+	    int toAccountNumber = Integer.parseInt(request.getParameter("to_account_number"));
+	    double amount = Double.parseDouble(request.getParameter("amount"));
+	    
+	    Transaction transaction = new Transaction(customer.getId(), customer.getId(), transactionType, amount);
+	    
+	    if ("Transfer".equalsIgnoreCase(transactionType)) {
+	        transaction.setReceiverAccountNumber(toAccountNumber);
+	    }
+		
+	    boolean transactionSuccessful = bankDao.newTransaction(transaction);
+	    
+	    if (transactionSuccessful) System.out.println("Transaction successful");
+	    else {
+	    	
+	        request.setAttribute("errorMessage", "Transaction failed. Please try again.");
+	        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/newTransaction.jsp");
+	        requestDispatcher.forward(request, response);
+	    }
+	}
+
+}

@@ -1,0 +1,60 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>View Customers</title>
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<style>
+.container {
+	margin-top: 50px;
+}
+
+.table {
+	margin-top: 20px;
+}
+</style>
+</head>
+<body>
+<div class="givebg">
+	<div class="container">
+		<a href="/admin" class="button">Back to Admin Home</a>
+		<h2 class="text-center">Customers</h2>
+		<form action="searchCustomer" method="get" class="search-form">
+			<label for="searchBy">Search By:</label> <select id="searchBy"
+				name="searchBy" required>
+				<option value="">Select...</option>
+				<option value="customerId">Customer ID</option>
+				<option value="customerName">Customer Name</option>
+			</select> <input type="text" id="searchValue" name="searchValue"
+				placeholder="Enter search value" required>
+
+			<button type="submit" class="btn">Search</button>
+		</form>
+		<div class="text-right mb-3"></div>
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Email</th>
+					<th>Password</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="customer" items="${customers}">
+					<tr>
+						<td>${customer.firstName}</td>
+						<td>${customer.lastName}</td>
+						<td>${customer.email}</td>
+						<td>${customer.passsword}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+	</div>
+</div>
+</body>
+</html>
