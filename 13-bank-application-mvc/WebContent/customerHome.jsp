@@ -15,9 +15,9 @@
 
 	<div class="navbar">
         <a href="user">Home</a>
-        <a href="passbook.jsp">Passbook</a>
-        <a href="newTransaction.jsp">New Transaction</a>
-        <a href="editProfile.jsp">Edit Profile</a>
+        <a href="user?command=view_passbook">Passbook</a>
+        <a href="user?command=new_transaction">New Transaction</a>
+        <a href="user?command=edit_profile">Edit Profile</a>
     	<a href="logout" class="logout-btn">Logout</a>
     </div>
 
@@ -27,17 +27,17 @@
             <div class="card">
                 <h2>Passbook</h2>
                 <p>View your passbook details (debit/credit/transfer).</p>
-                <a href="passbook.jsp" class="btn">Passbook</a>
+                <a href="user?command=view_passbook" class="btn">Passbook</a>
             </div>
             <div class="card">
                 <h2>New Transaction</h2>
                 <p>Make a new transaction to own/another account.</p>
-                <a href="newTransaction.jsp" class="btn">New Transaction</a>
+                <a href="user?command=new_transaction" class="btn">New Transaction</a>
             </div>
             <div class="card">
                 <h2>Edit Profile</h2>
                 <p>Update/change your current profile details.</p>
-                <a href="editProfile.jsp" class="btn">Edit Profile</a>
+                <a href="user?command=edit_profile" class="btn">Edit Profile</a>
             </div>
         </div>
     </div>

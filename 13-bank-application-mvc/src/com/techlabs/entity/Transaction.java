@@ -22,10 +22,6 @@ public class Transaction {
 		this.amount = amount;
 		this.date = date;
 	}
-	
-	
-	
-
 
 	public Transaction(int senderAccountNumber, int receiverAccountNumber, String type, double amount) {
 		super();
@@ -101,8 +97,5 @@ public class Transaction {
 		return "Account [id=" + id + ", senderAccountNumber=" + senderAccountNumber + ", receiverAccountNumber="
 				+ receiverAccountNumber + ", type=" + type + ", amount=" + amount + ", date=" + date + "]";
 	}
-    
-	
-	
 
 }

@@ -20,8 +20,6 @@ public class Customer {
 
 
 	public Customer(String firstName, String lastName, String email, String password) {
-		// TODO Auto-generated constructor stub
-		
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;

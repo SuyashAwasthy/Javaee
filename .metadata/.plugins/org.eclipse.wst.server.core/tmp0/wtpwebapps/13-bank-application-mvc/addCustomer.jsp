@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
@@ -29,7 +29,7 @@
 				<div class="card mt-5">
 					<div class="card-body">
 						<h3 class="card-title text-center">Add New Customer</h3>
-						<form action="admin" method="get">
+						<form action="admin" method="post">
 							<input type="hidden" name="command" value="add_customer">
 							<div class="form-group">
 								<label for="firstName">Customer's first name</label> <input
@@ -51,7 +51,7 @@
 							</div>
 							<div class="form-group text-center">
 								<button type="submit" class="btn btn-primary">Submit</button>
-								<button type="reset" class="btn btn-secondary">Cancel</button>
+								<button type="reset" class="btn btn-secondary">Reset</button>
 							</div>
 
 
@@ -59,6 +59,9 @@
 						</form>
 						<c:if test="${not empty errorMessage}">
 							<div class="alert alert-danger mt-3">${errorMessage}</div>
+						</c:if>
+						<c:if test="${not empty successMessage}">
+							<div class="alert alert-success mt-3">${successMessage}</div>
 						</c:if>
 					</div>
 				</div>

@@ -23,7 +23,8 @@
 	<div class="container">
 		<a href="admin" class="button">Back to Admin Home</a>
 		<h2 class="text-center">Transactions</h2>
-		<form action="searchTransactionsByDate" method="get" class="date-form">
+		<form action="admin" method="post" class="date-form">
+		<input type="hidden" name="command" value ="view_transaction">
 			<label for="start_date">Start Date:</label> <input type="date"
 				id="start_date" name="start_date" required> <label
 				for="end_date">End Date:</label> <input type="date" id="end_date"
@@ -37,7 +38,7 @@
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-					<th>ID</th>
+					<th>Transaction ID</th>
 					<th>Sender Account Number</th>
 					<th>Receiver Account Number</th>
 					<th>Type</th>
@@ -46,7 +47,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="transaction" items="${transactions}">
+				<c:forEach var="transaction" items="${transactionList}">
 					<tr>
 						<td>${transaction.id}</td>
 						<td>${transaction.senderAccountNumber}</td>

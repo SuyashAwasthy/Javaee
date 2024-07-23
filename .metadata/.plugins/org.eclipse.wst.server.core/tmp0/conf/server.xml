@@ -168,10 +168,6 @@
 
   <Resource auth="Container" driverClassName="com.mysql.cj.jdbc.Driver" maxActive="20" maxIdle="5" maxWait="10000" name="jdbc/bankdb" password="Suyash@21" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/bankdb?useSSL=false&amp;serverTimezone=UTC" username="root"/>
 
-</Context><Context docBase="C:\Users\stuti\Desktop\Javaee\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\14-bank" path="/14-bank" reloadable="true" source="org.eclipse.jst.jee.server:14-bank">
-
-  <Resource auth="Container" driverClassName="com.mysql.cj.jdbc.Driver" maxActive="20" maxIdle="5" maxWait="10000" name="jdbc/bank_mvc" password="Suyash@21" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/bank_mvc?useSSL=false&amp;serverTimezone=UTC" username="root"/>
-
 </Context></Host>
     </Engine>
   </Service>

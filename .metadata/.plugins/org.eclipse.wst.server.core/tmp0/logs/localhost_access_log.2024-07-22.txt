@@ -1099,3 +1099,4 @@
 0:0:0:0:0:0:0:1 - - [22/Jul/2024:23:35:17 +0530] "GET /13-bank-application-mvc/admin HTTP/1.1" 302 -
 0:0:0:0:0:0:0:1 - - [22/Jul/2024:23:35:18 +0530] "GET /13-bank-application-mvc/login.jsp HTTP/1.1" 200 1171
 0:0:0:0:0:0:0:1 - - [22/Jul/2024:23:35:18 +0530] "GET /13-bank-application-mvc/css/styles.css HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [22/Jul/2024:23:46:43 +0530] "GET /13-bank-application-mvc/css/styles.css HTTP/1.1" 304 -

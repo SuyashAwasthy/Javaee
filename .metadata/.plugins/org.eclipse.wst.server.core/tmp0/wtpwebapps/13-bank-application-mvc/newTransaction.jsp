@@ -27,11 +27,11 @@
 
 		<h2 class="text-center">New Transaction</h2>
 
-		<form action="user" method="get">
+		<form action="user" method="post">
 			<input type="hidden" name="command" value="new_transaction">
 			<div class="form-group">
-				<label for="transactionType">Transaction Type</label> <select
-					class="form-control" id="transactionType" name="transactionType"
+				<label for="transaction_type">Transaction Type</label> <select
+					class="form-control" id="transaction_type" name="transaction_type"
 					required>
 					<option value="credit">Credit</option>
 					<option value="debit">Debit</option>
@@ -51,10 +51,16 @@
 			<button type="submit" class="btn btn-primary">Submit</button>
 			<button type="reset" class="btn btn-secondary">Cancel</button>
 		</form>
+		<c:if test="${not empty errorMessage}">
+			<div class="alert alert-danger mt-3">${errorMessage}</div>
+		</c:if>
+		<c:if test="${not empty successMessage}">
+			<div class="alert alert-success mt-3">${successMessage}</div>
+		</c:if>
 	</div>
 
 	<script>
-		document.getElementById('transactionType').addEventListener(
+		document.getElementById('transaction_type').addEventListener(
 				'change',
 				function() {
 					var toAccountGroup = document

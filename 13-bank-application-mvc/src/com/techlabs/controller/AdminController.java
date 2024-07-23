@@ -1,10 +1,10 @@
 package com.techlabs.controller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -135,9 +135,9 @@ public class AdminController extends HttpServlet {
 		requestDispatcher.forward(request, response);
 		
 	}
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-
-	private void viewTransaction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private void viewTransaction(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		List<Transaction> transactions = null;
 	    String errorMessage = null;
@@ -145,24 +145,30 @@ public class AdminController extends HttpServlet {
 	    String startDateStr = request.getParameter("start_date");
 	    String endDateStr = request.getParameter("end_date");
 	    
-//	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	    
 	    if(startDateStr != null || endDateStr != null) {
 	    	
-		    Timestamp startDate = null;
-			Timestamp endDate = null;
-			if (startDateStr != null && !startDateStr.isEmpty()) {
-			    startDate = (Timestamp) dateFormat.parse(startDateStr);
-			}
-			if (endDateStr != null && !endDateStr.isEmpty()) {
-			    endDate = (Timestamp) dateFormat.parse(endDateStr);
-			}
-			System.out.println(startDate);
-			Timestamp startTimestamp = startDate != null ? new Timestamp(startDate.getTime()) : null;
-			Timestamp endTimestamp = endDate != null ? new Timestamp(endDate.getTime()) : null;
-			
-			transactions = adminDao.viewTransactionByDate(startTimestamp, endTimestamp);
+	    	try {
+	            Timestamp startTimestamp = null;
+	            Timestamp endTimestamp = null;
+				if (startDateStr != null && !startDateStr.isEmpty()) {
+	                Date startDate = (Date) DATE_FORMAT.parse(startDateStr);
+	                startTimestamp = new Timestamp(startDate.getTime());
+	            }
+	            
+				if (endDateStr != null && !endDateStr.isEmpty()) {
+	                Date endDate = (Date) DATE_FORMAT.parse(endDateStr);
+	                endTimestamp = new Timestamp(endDate.getTime());
+	            }
+				
+				System.out.println(startTimestamp+" "+ endTimestamp);
+
+	            transactions = adminDao.viewTransactionByDate(startTimestamp, endTimestamp);
+	        } 
+	    	catch (ParseException e) {
+	            errorMessage = "Invalid date format. Please enter dates in 'yyyy-MM-dd' format.";
+	        }
 	    }
 	    else {
 	    	transactions = adminDao.viewTransaction();
@@ -182,9 +188,7 @@ public class AdminController extends HttpServlet {
 	}
 
 
-	private void addCustomer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		
+	private void addCustomer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		String firstName = request.getParameter("first_name");
 		String lastName = request.getParameter("last_name");
 		String email = request.getParameter("email");
@@ -213,14 +217,10 @@ public class AdminController extends HttpServlet {
 			requestDispatcher.forward(request, response);
 			
 		}
-		
-		
-		
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

@@ -10,9 +10,9 @@
 <body>
     <div class="navbar">
         <a href="admin">Home</a>
-        <a href="addCustomer.jsp">Add Customer</a>
-        <a href="viewCustomers.jsp">View Customers</a>
-        <a href="viewTransaction.jsp">View Transactions</a>
+        <a href="admin?command=add_customer">Add Customer</a>
+        <a href="admin?command=view_customer">View Customers</a>
+        <a href="admin?command=view_transaction">View Transactions</a>
     	<a href="logout" class="logout-btn">Logout</a>
     </div>
 
